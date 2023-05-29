@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        function genTokenData(p) {
+            let data = {};
+            let hash = "0x";
+            for (var i = 0; i < 64; i++) {
+                hash += Math.floor(Math.random() * 16).toString(16);
+            }
+            data.hash = hash;
+            data.tokenId = p * 1000000 + Math.floor(Math.random() * 1000);
+            return data;
+        }
+        let tokenData = genTokenData(1);
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" type="image/png" href="fav.png">
+
+    <title>INNIT</title>
+    <style type="text/css">
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        color: #808080;
+    }
+
+    canvas {
+        padding: 0;
+        margin: auto;
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    * {
+        font-family: helvetica, sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: .25px;
+    }
+
+    section {
+        position: absolute;
+        z-index: 100;
+        padding: 10px;
+        line-height: 4;
+
+    }
+
+    h1 {
+        padding: 0;
+        margin: 0;
+    }
+
+    label {
+        margin: 0px;
+    }
+
+    button,
+    input,
+    option,
+    select,
+    .button,
+    #checkInvert {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+        background-color: #808080;
+        outline: none;
+        border: none;
+        color: black;
+        padding: 4px 6px;
+        cursor: pointer;
+    }
+
+    button img {
+        display: inline;
+    }
+
+    select {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    button,
+    .button {
+        border-radius: 10px;
+        padding: 6px 8px;
+    }
+
+    #checkInvert {
+        border-radius: 10px;
+        margin-top: 2px;
+        display: inline;
+        padding: 5px 8px;
+        margin-right: 3px;
+
+    }
+
+    #invert {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0px;
+        margin-top: -2px;
+        mix-blend-mode: multiply;
+        filter: saturate(0%);
+    }
+
+    input {
+        padding: 5px 8px;
+        width: 100px;
+        letter-spacing: .25px;
+
+    }
+
+
+
+    #invert {
+        width: inherit;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    #custom,
+    #updateCustom,
+    #customOne,
+    #customTwo,
+    #customThree {
+        display: none;
+    }
+
+    #tt {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border: 1px solid rgba(70, 70, 70, 1);
+        border-radius: 10px;
+        margin: 10px;
+        max-width: 220px;
+    }
+
+    #tt p {
+        letter-spacing: .25px;
+
+        margin: 0;
+        padding: 0;
+        line-height: 1.2;
+    }
+
+    img {
+        margin: 0;
+        vertical-align: middle;
+
+    }
+
+    #custom, #customOne, #customTwo, #customThree, #updateCustom{
+        background-color: rgba(70, 70, 70, 1);
+        color: grey;
+    }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.15/paper-full.min.js" integrity="sha512-ovjLI1ZcZe6bw+ImQ21r+sv8q/Vwob2kq7tFidK6E1LWfi0T4uobbmpfEU1//a9h9o5Kkt+MnMWf6rWlg0EiMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body>
+    <section>
+        <img src="wordmark.png" width="80px" style="display: inline; margin-right: 5px;">
+        <label class="fileCustom">
+            <input type="file" id="fileTag" />
+            <p class="button" id="uploader">⧆ image Upload</p>
+        </label>
+        <select name="color" id="color">
+            <option value="three">◯◯◯ 3-color</option>
+            <option value="customThree">◯◯◯ custom 3-color</option>
+            <option value="grey">◯ grey 1-color</option>
+            <option value="white">◯ white 1-color</option>
+            <option value="purple">◯ purple 1-color</option>
+            <option value="custom">◯ custom 1-color</option>
+        </select>
+        <input type="text" id="custom" name="name" required minlength="7" maxlength="7" size="10" placeholder="#ffffff">
+        <input type="text" id="customOne" name="name" required minlength="7" maxlength="7" size="10" placeholder="#ffffff">
+        <input type="text" id="customTwo" name="name" required minlength="7" maxlength="7" size="10" placeholder="#ffffff">
+        <input type="text" id="customThree" name="name" required minlength="7" maxlength="7" size="10" placeholder="#ffffff">
+        <button id="updateCustom">UPDATE</button>
+        <select name="grid" id="grid">
+            <option value="small"><span>▤</span> small</option>
+            <option value="medium"><span>▦</span> medium</option>
+            <option value="large"><span>▩</span> large</option>
+        </select>
+        <label id="checkInvert">
+            <input type="checkbox" id="invert"> invert
+        </label>
+        <button id="save">▼ save as svg</button>
+        <button id="savePNG" onclick="saveAsPNG()">▼ Save as PNG</button>
+    </section>
+    <section id="tt">
+        <p style="color: rgba(70,70,70,1); text-transform: lowercase;">( i )</p>
+        <p id="toolTipText"></p>
+    </section>
+    <script type="text/javascript">
+    function saveAsPNG() {
+        var canvas = document.getElementById("canvas");
+        var link = document.createElement("a");
+        link.download = "canvas.png";
+        link.href = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        link.click();
+    }
+    </script>
+    <script>
+    // Get the tooltipText element
+    const tooltipElement = document.getElementById('toolTipText');
+
+    // Function to update the tooltip text
+    function updateTooltipText(text) {
+        tooltipElement.textContent = text;
+        tooltipElement.style.display = 'inherit'
+
+    }
+
+
+    // Get all HTML elements
+    const elements = document.querySelectorAll('*');
+
+    // Create a function to handle the hover event
+    function handleHover(event) {
+        const hoveredElement = event.target;
+        const elementId = hoveredElement.getAttribute('id');
+
+
+        if (elementId) {
+
+            if (elementId === "savePNG") {
+                const newText = "save output as a .png file.";
+                updateTooltipText(newText);
+            }
+
+            if (elementId === "save") {
+                const newText = "save output as a .svg file.";
+                updateTooltipText(newText);
+            }
+
+            if (elementId === "uploader") {
+                const newText = "choose a local image as a source. note: images will be cropped into a square format.";
+                updateTooltipText(newText);
+            }
+
+            if (elementId === "checkInvert") {
+                const newText = "invert the rendered output.";
+                updateTooltipText(newText);
+            }
+
+
+            if (elementId === "grid") {
+                const newText = "this changes the grid density. the larger the grid, the more complex the output becomes. note: the large grid setting does not support .svg downloads.";
+                updateTooltipText(newText);
+            }
+
+            if (elementId === "color") {
+                const newText = "choose a color(s) for the output. 1 color, 3 color pattern and custom colors are available.";
+                updateTooltipText(newText);
+            }
+            if (elementId === "custom" || elementId === "customOne" || elementId === "customTwo" || elementId === "customThree") {
+                const newText = "choose a hex color. (i.e. #ffffff)";
+                updateTooltipText(newText);
+            }
+            if (elementId === "updateCustom") {
+                const newText = "output with custom colors.";
+                updateTooltipText(newText);
+            }
+            if (elementId === "canvas") {
+                tooltipElement.style.display = 'none'
+            }
+        }
+    }
+
+    // Attach the hover event listener to each HTML element
+    elements.forEach(element => {
+        element.addEventListener('mouseover', handleHover);
+    });
+    </script>
+</body>
+
+</html>
